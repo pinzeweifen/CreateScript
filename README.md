@@ -11,6 +11,7 @@
 5个文件夹：
 
     BuildController
+<<<<<<< HEAD
 
     Controller
 
@@ -18,6 +19,15 @@
 
     Model
 
+=======
+    
+    Controller
+    
+    BuildUI
+    
+    Model
+    
+>>>>>>> b16a66bc91adb2854dfb2e7f83421f73f7b1c915
     UI
 
 5 个文件:
@@ -25,15 +35,25 @@
 [可更改文件]
 
     Name_UI.cs
+<<<<<<< HEAD
 
     Name_Model.cs
 
+=======
+    
+    Name_Model.cs
+    
+>>>>>>> b16a66bc91adb2854dfb2e7f83421f73f7b1c915
     Name_Controller.cs
 
 [更新文件，通常这些文件是不更改的]
 
     Name_BuildUI.cs
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> b16a66bc91adb2854dfb2e7f83421f73f7b1c915
     Name_BuildController.cs
 
 
@@ -72,4 +92,8 @@
 取消查找     [在 Hierarchy 面板绑定对象]
 
 #### 捐款
+<<<<<<< HEAD
 ![Image a](https://raw.githubusercontent.com/pinzeweifen/CreateScript/master/image/a6x01158ynw6dgxmb8flf56.png)
+=======
+![Image a](https://raw.githubusercontent.com/pinzeweifen/CreateScript/master/image/a6x01158ynw6dgxmb8flf56.png)
+>>>>>>> b16a66bc91adb2854dfb2e7f83421f73f7b1c915
