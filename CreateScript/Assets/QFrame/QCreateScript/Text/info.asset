@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dirPath: 
   list:
-  - className: Canvas__UI
+  - className: Canvas_UI
     fieldInfos:
     - name: InputField_InputField
       type: InputField

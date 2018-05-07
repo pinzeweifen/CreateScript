@@ -72,4 +72,5 @@
 取消查找     [在 Hierarchy 面板绑定对象]
 
 #### 捐款
-![Image a](https://raw.githubusercontent.com/pinzeweifen/CreateScript/master/image/a6x01158ynw6dgxmb8flf56.png)
+![Image a](https://raw.githubusercontent.com/pinzeweifen/CreateScript/master/image/zhifubao.jpg)
+![Image a](https://raw.githubusercontent.com/pinzeweifen/CreateScript/master/image/weixin.png)

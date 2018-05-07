@@ -9,22 +9,15 @@ public class QImage : QBaseUI
 {
     public Image target;
     
-    public Sprite Texture
+    public Sprite Value
     {
-        get
-        {
-            return target.sprite;
-        }
-        set
-        {
-            target.sprite = value;
-        }
+        get { return target.sprite; }
+        set { target.sprite = value; }
     }
 
     public QImage(Image value):base(value.rectTransform)
     {
         target = value;
-        
     }
 
 

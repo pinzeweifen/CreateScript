@@ -8,13 +8,14 @@ using UnityEngine.Events;
 
 public abstract class QBaseUI
 {
+    protected QUIEvent uIEvent;
+    protected QAnimation animation;
     protected Graphic graphic;
-    protected List< EventTrigger.Entry> trigger;
     protected CanvasGroup canvasGroup;
     protected RectTransform transform;
-    protected IAnimation currentAnimation;
-    protected Dictionary<string, IAnimation> animationDic = new Dictionary<string, IAnimation>();
     
+    public QUIEvent UIEvent{get{return uIEvent??(uIEvent = new QUIEvent(transform));}}
+    public QAnimation Animation{get{return animation??(animation=new QAnimation());}}
     protected Graphic Graphic { get { return graphic ?? (graphic=QGlobalFun.GetComponent<Graphic>(transform.gameObject)); } }
     public RectTransform Transform { get { return transform; } }
     public CanvasGroup CanvasGroup { get { return canvasGroup ?? (canvasGroup=QGlobalFun.GetComponent<CanvasGroup>(transform.gameObject)); } }
@@ -29,66 +30,9 @@ public abstract class QBaseUI
         }
     }
 
-    protected List<EventTrigger.Entry> Triggers {
-        get {
-            if(trigger == null)
-            {
-                trigger = new List<EventTrigger.Entry>();
-                QGlobalFun.GetComponent<EventTrigger>(transform.gameObject).triggers = trigger;
-            }
-            return trigger;
-        }
-    }
-
     public QBaseUI(Transform transform)
     {
         this.transform = transform as RectTransform;
     }
 
-    public void AddAnimatin(string key, IAnimation animation)
-    {
-        if (!animationDic.ContainsKey(key))
-        {
-            animationDic.Add(key, animation);
-            return;
-        }
-        animationDic[key] = animation;
-    }
-
-    public void SetCurrentAnimation(string key)
-    {
-        if (!animationDic.ContainsKey(key))
-        {
-            currentAnimation = null;
-            return;
-        }
-        currentAnimation = animationDic[key];
-    }
-
-    public void Play()
-    {
-        if (currentAnimation != null)
-            currentAnimation.Play();
-    }
-
-    public void Pause()
-    {
-        if (currentAnimation != null)
-            currentAnimation.Pause();
-    }
-
-    public void Stop()
-    {
-        if (currentAnimation != null)
-            currentAnimation.Stop();
-    }
-    
-    public void AddEvent(EventTriggerType type, UnityAction<BaseEventData> callback)
-    {
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = type;
-        entry.callback = new EventTrigger.TriggerEvent();
-        entry.callback.AddListener(callback);
-        Triggers.Add(entry);
-    }
 }
