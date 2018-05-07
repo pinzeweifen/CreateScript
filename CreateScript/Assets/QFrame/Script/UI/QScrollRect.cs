@@ -14,6 +14,7 @@ public class QScrollRect : QBaseUI
     public QScrollRect(ScrollRect value) : base(value.transform)
     {
         target = value;
+        
     }
 
 }
