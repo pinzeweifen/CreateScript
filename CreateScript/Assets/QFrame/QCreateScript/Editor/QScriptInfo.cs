@@ -3,49 +3,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QScriptInfo : ScriptableObject
+namespace CreateScript
 {
-    public string dirPath;
-    [SerializeField]
-    private List<ClassInfo> list = new List<ClassInfo>();
-
-    public void SetClassInfo(string className, FieldInfo[] infos)
+    public class QScriptInfo : ScriptableObject
     {
-        foreach (var key in list)
+        public string dirPath;
+        [SerializeField]
+        private List<ClassInfo> list = new List<ClassInfo>();
+
+        public void SetClassInfo(string className, FieldInfo[] infos)
         {
-            if (key.className == className)
+            foreach (var key in list)
             {
-                key.fieldInfos = null;
-                key.fieldInfos = infos;
-                return;
+                if (key.className == className)
+                {
+                    key.fieldInfos = null;
+                    key.fieldInfos = infos;
+                    return;
+                }
             }
+            list.Add(new ClassInfo { className = className, fieldInfos = infos });
         }
-        list.Add(new ClassInfo { className = className, fieldInfos = infos });
-    }
 
-    public FieldInfo[] GetFieldInfos(string className)
-    {
-        foreach (var key in list)
+        public FieldInfo[] GetFieldInfos(string className)
         {
-            if (key.className == className)
+            foreach (var key in list)
             {
-                return key.fieldInfos;
+                if (key.className == className)
+                {
+                    return key.fieldInfos;
+                }
             }
+            return null;
         }
-        return null;
-    }
 
-    [Serializable]
-    private class ClassInfo
-    {
-        public string className;
-        public FieldInfo[] fieldInfos;
-    }
-    [Serializable]
-    public class FieldInfo
-    {
-        public string name;
-        public string type;
-        public string path;
+        [Serializable]
+        private class ClassInfo
+        {
+            public string className;
+            public FieldInfo[] fieldInfos;
+        }
+        [Serializable]
+        public class FieldInfo
+        {
+            public string name;
+            public string type;
+            public string path;
+        }
     }
 }
