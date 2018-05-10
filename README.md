@@ -71,6 +71,6 @@
 
 取消查找     [在 Hierarchy 面板绑定对象]
 
-#### 捐款
+#### 土豪给点钱吧
 ![Image a](https://raw.githubusercontent.com/pinzeweifen/CreateScript/master/image/zhifubao.jpg)
 ![Image a](https://raw.githubusercontent.com/pinzeweifen/CreateScript/master/image/weixin.png)
