@@ -51,7 +51,7 @@
 
 绑定UI   [只有从当前插件创建的UI才能绑定，且必须先把脚本挂载到对象上]
 
-全选变量     [选择生成所有子对象] 
+全选变量     [选择生成所有子对象,当对象被折叠时不能被选中] 
 
 全取消变量   [取消选择生成所有子对象]
 
@@ -70,6 +70,12 @@
 查找赋值     [通过transform.Find查找对象] 
 
 取消查找     [在 Hierarchy 面板绑定对象]
+
+#### 附带删除对象上空脚本插件
+
+NothingSelected
+
+	先选择对象，然后点击NothingSelected，删除对象以及子对象上所有空脚本
 
 #### 土豪给点钱吧
 ![Image a](https://raw.githubusercontent.com/pinzeweifen/CreateScript/master/image/zhifubao.jpg)

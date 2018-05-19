@@ -184,6 +184,9 @@
     <Reference Include="UnityEngine.WindModule">
       <HintPath>G:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>Library/ScriptAssemblies/Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>G:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -253,12 +256,6 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>G:/Program Files (x86)/Microsoft Visual Studio Tools for Unity/15.0/Editor/SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Data.Sqlite">
-      <HintPath>Assets/QFrame/Sqlite/Plugins/Mono.Data.Sqlite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data">
-      <HintPath>Assets/QFrame/Sqlite/Plugins/System.Data.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>G:/Users/yu/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.ads@1.0.7/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -274,32 +271,20 @@
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>G:/Users/yu/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@1.0.1/Editor/UnityEditor.Purchasing.dll</HintPath>
     </Reference>
-    <Reference Include="DOTweenEditor">
-      <HintPath>Assets/QFrame/DOTween/Editor/DOTweenEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="DOTween">
-      <HintPath>Assets/QFrame/DOTween/DOTween.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CreateScript.csproj">
-      <Project>{1FAECCD0-B90B-5120-9A33-DFD1C8CD62DB}</Project>
-      <Name>CreateScript</Name>
+    <ProjectReference Include="CreateScript.Plugins.csproj">
+      <Project>{5DC1F55B-C952-5F7A-B6C8-5A1CCDBAB294}</Project>
+      <Name>CreateScript.Plugins</Name>
+    </ProjectReference>
+    <ProjectReference Include="CreateScript.Editor.Plugins.csproj">
+      <Project>{73C3C523-A396-B293-924B-989B9D6E6CE9}</Project>
+      <Name>CreateScript.Editor.Plugins</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\QFrame\Pack\Editor\Builder.cs" />
-    <Compile Include="Assets\QFrame\QCreateScript\Editor\QConfigure.cs" />
-    <Compile Include="Assets\QFrame\QCreateScript\Editor\QCreateScript.cs" />
-    <Compile Include="Assets\QFrame\QCreateScript\Editor\QManagerVariable.cs" />
-    <Compile Include="Assets\QFrame\QCreateScript\Editor\QScriptInfo.cs" />
-    <Compile Include="Assets\QFrame\QCreateScript\Editor\QVariableModel.cs" />
-    <Compile Include="Assets\QFrame\QCreateScript\Editor\QVariableState.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Assets\QFrame\DOTween\DOTween.XML" />
-    <None Include="Assets\QFrame\DOTween\Editor\DOTweenEditor.XML" />
-    <None Include="Assets\QFrame\DOTween\readme.txt" />
+    <Compile Include="Assets\Editor\ObjectText.cs" />
+    <Compile Include="Assets\Editor\Test.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

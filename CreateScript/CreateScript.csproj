@@ -211,58 +211,35 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>G:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
-    <Reference Include="Mono.Data.Sqlite">
-      <HintPath>Assets/QFrame/Sqlite/Plugins/Mono.Data.Sqlite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data">
-      <HintPath>Assets/QFrame/Sqlite/Plugins/System.Data.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>G:/Users/yu/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.analytics@1.0.1/UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Purchasing">
       <HintPath>G:/Users/yu/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.purchasing@1.0.1/UnityEngine.Purchasing.dll</HintPath>
     </Reference>
-    <Reference Include="DOTween">
-      <HintPath>Assets/QFrame/DOTween/DOTween.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\QFrame\Animation\IAnimation.cs" />
-    <Compile Include="Assets\QFrame\Common\MonoSingleton.cs" />
-    <Compile Include="Assets\QFrame\Common\QDebug.cs" />
-    <Compile Include="Assets\QFrame\Common\QEventListener.cs" />
-    <Compile Include="Assets\QFrame\Common\QFileOperation.cs" />
-    <Compile Include="Assets\QFrame\Common\QSingleton.cs" />
-    <Compile Include="Assets\QFrame\Common\QTreeNode.cs" />
-    <Compile Include="Assets\QFrame\Common\QWebRequest.cs" />
-    <Compile Include="Assets\QFrame\Common\VideoManager.cs" />
-    <Compile Include="Assets\QFrame\MessageCenter\QEvent.cs" />
-    <Compile Include="Assets\QFrame\MessageCenter\QGlobalEnum.cs" />
-    <Compile Include="Assets\QFrame\MessageCenter\QMessage.cs" />
-    <Compile Include="Assets\QFrame\MessageCenter\QMessageCenter.cs" />
-    <Compile Include="Assets\QFrame\QCreateScript\Script\Common\QGlobalFun.cs" />
-    <Compile Include="Assets\QFrame\Sqlite\Scripts\DbAccess.cs" />
-    <Compile Include="Assets\QFrame\UI\BaseUI\QAnimation.cs" />
-    <Compile Include="Assets\QFrame\UI\BaseUI\QBaseUI.cs" />
-    <Compile Include="Assets\QFrame\UI\BaseUI\QBaseWindow.cs" />
-    <Compile Include="Assets\QFrame\UI\BaseUI\QUIEvent.cs" />
-    <Compile Include="Assets\QFrame\UI\BaseUI\QWindowNavigation.cs" />
-    <Compile Include="Assets\QFrame\UI\QButton.cs" />
-    <Compile Include="Assets\QFrame\UI\QDropdown.cs" />
-    <Compile Include="Assets\QFrame\UI\QImage.cs" />
-    <Compile Include="Assets\QFrame\UI\QInputField.cs" />
-    <Compile Include="Assets\QFrame\UI\QRawImage.cs" />
-    <Compile Include="Assets\QFrame\UI\QScrollbar.cs" />
-    <Compile Include="Assets\QFrame\UI\QScrollRect.cs" />
-    <Compile Include="Assets\QFrame\UI\QSlider.cs" />
-    <Compile Include="Assets\QFrame\UI\QText.cs" />
-    <Compile Include="Assets\QFrame\UI\QToggle.cs" />
+    <ProjectReference Include="CreateScript.Plugins.csproj">
+      <Project>{5DC1F55B-C952-5F7A-B6C8-5A1CCDBAB294}</Project>
+      <Name>CreateScript.Plugins</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\QFrame\DOTween\DOTween.XML" />
-    <None Include="Assets\QFrame\DOTween\Editor\DOTweenEditor.XML" />
-    <None Include="Assets\QFrame\DOTween\readme.txt" />
+    <Compile Include="Assets\Script\UI\BuildController\Button_BuildController.cs" />
+    <Compile Include="Assets\Script\UI\BuildController\Canvas_BuildController.cs" />
+    <Compile Include="Assets\Script\UI\BuildController\InputField1_BuildController.cs" />
+    <Compile Include="Assets\Script\UI\BuildUI\Button_BuildUI.cs" />
+    <Compile Include="Assets\Script\UI\BuildUI\Canvas_BuildUI.cs" />
+    <Compile Include="Assets\Script\UI\BuildUI\InputField1_BuildUI.cs" />
+    <Compile Include="Assets\Script\UI\Controller\Button_Controller.cs" />
+    <Compile Include="Assets\Script\UI\Controller\Canvas_Controller.cs" />
+    <Compile Include="Assets\Script\UI\Controller\InputField1_Controller.cs" />
+    <Compile Include="Assets\Script\UI\Model\Button_Model.cs" />
+    <Compile Include="Assets\Script\UI\Model\Canvas_Model.cs" />
+    <Compile Include="Assets\Script\UI\Model\InputField1_Model.cs" />
+    <Compile Include="Assets\Script\UI\UI\Button_UI.cs" />
+    <Compile Include="Assets\Script\UI\UI\Canvas_UI.cs" />
+    <Compile Include="Assets\Script\UI\UI\InputField1_UI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
