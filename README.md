@@ -76,7 +76,3 @@
 NothingSelected
 
 	先选择对象，然后点击NothingSelected，删除对象以及子对象上所有空脚本
-
-#### 土豪给点钱吧
-![Image a](https://raw.githubusercontent.com/pinzeweifen/CreateScript/master/image/zhifubao.jpg)
-![Image a](https://raw.githubusercontent.com/pinzeweifen/CreateScript/master/image/weixin.png)
