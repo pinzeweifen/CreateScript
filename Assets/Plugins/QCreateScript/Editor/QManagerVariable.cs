@@ -90,7 +90,7 @@ namespace CreateScript
 
             var tmp = string.Format(QConfigure.uiClassCode,
                 variable, attributeVariable, controllerEvent, attribute, find, newAttribute, register, function);
-            return string.Format(QConfigure.uiCode, QGlobalFun.GetString(Selection.activeTransform.name), tmp);
+            return string.Format(QConfigure.uiCode2, QGlobalFun.GetString(Selection.activeTransform.name), tmp);
         }
 
         StringBuilder assignment = new StringBuilder();
@@ -118,8 +118,17 @@ namespace CreateScript
                 }
             }
 
+            string code = string.Empty;
+            if (QConfigure.isCreateModel)
+            {
+                code = QConfigure.controllerBuildCode;
+            }
+            else
+            {
+                code = QConfigure.controllerBuildCode2;
+            }
             return string.Format(
-                QConfigure.controllerBuildCode,
+                code,
                 QGlobalFun.GetString(Selection.activeTransform.name),
                 assignment,
                 declare,
@@ -220,9 +229,17 @@ namespace CreateScript
 
             QFileOperation.WriteText(QConfigure.FilePath(QConfigure.UIFileName), GetUICode());
             QFileOperation.WriteText(QConfigure.FilePath(QConfigure.UIBuildFileName), GetBuildUICode());
-            QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ModelFileName), GetModelCode());
-            QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ControllerFileName), GetControllerCode());
-            QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ControllerBuildFileName), GetControllerBuildCode());
+
+            if(QConfigure.isCreateModel)
+            {
+                QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ModelFileName), GetModelCode());
+            }
+
+            if (QConfigure.isCreateController)
+            {
+                QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ControllerFileName), GetControllerCode());
+                QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ControllerBuildFileName), GetControllerBuildCode());
+            }
 
             GetBindingInfo();
             AssetDatabase.Refresh();
@@ -243,8 +260,12 @@ namespace CreateScript
                 return;
             }
             QFileOperation.WriteText(QConfigure.FilePath(QConfigure.UIBuildFileName), GetBuildUICode(), FileMode.Create);
-            QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ControllerBuildFileName), GetControllerBuildCode(), FileMode.Create);
 
+            if (QConfigure.isCreateController)
+            {
+                QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ControllerBuildFileName), GetControllerBuildCode(), FileMode.Create);
+            }
+            
             GetBindingInfo();
             AssetDatabase.Refresh();
         }
@@ -368,7 +389,10 @@ namespace CreateScript
             }
             else
             {
-                AssetDatabase.CreateAsset(so, QConfigure.AssetPath);
+                if (QFileOperation.IsDirctoryName(QConfigure.AssetPath, true))
+                {
+                    AssetDatabase.CreateAsset(so, QConfigure.AssetPath);
+                }
             }
         }
 

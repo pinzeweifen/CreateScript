@@ -34,12 +34,23 @@ public class QFileOperation
     }
 
     /// <summary>
+    /// 创建文件夹
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public static bool CreateDirctory(string path)
+    {
+        return IsDirctoryName(path, true);
+    }
+
+    /// <summary>
     /// 写入文件
     /// </summary>
     /// <param name="filePath"></param>
     /// <param name="data"></param>
     public static void WriteBytes(string filePath, byte[] data)
     {
+        CreateDirctory(filePath);
         File.WriteAllBytes(filePath, data);
     }
 
@@ -48,13 +59,17 @@ public class QFileOperation
     /// </summary>
     /// <param name="filePath"></param>
     /// <param name="data"></param>
-    public static void WriteText(string filePath, string data, FileMode fileMode = FileMode.OpenOrCreate)
+    public static void WriteText(string filePath, string data, FileMode fileMode = FileMode.Create)
     {
-        FileStream stream = new FileStream(filePath, fileMode);
-        StreamWriter sw = new StreamWriter(stream);
-        sw.Write(data);
-        sw.Close();
-        sw.Dispose();
+        CreateDirctory(filePath);
+        using (FileStream stream = new FileStream(filePath, fileMode))
+        {
+            using (StreamWriter sw = new StreamWriter(stream, Encoding.UTF8))
+            {
+                sw.Write(data);
+                sw.Close();
+            }
+        }
     }
 
     /// <summary>
@@ -108,6 +123,11 @@ public class QFileOperation
         return Sprite.Create(t, new Rect(0, 0, t.width, t.height), new Vector2(0.5f, 0.5f));
     }
 
+    /// <summary>
+    /// 获得根据名字获得文件夹路径
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
     public static string GetAssetsDirectoryPath(string fileName)
     {
         DirectoryInfo dir = new DirectoryInfo(Application.dataPath);
@@ -122,6 +142,13 @@ public class QFileOperation
         return string.Empty;
     }
 
+    /// <summary>
+    /// 获得文件夹下所有文件名
+    /// </summary>
+    /// <param name="dirName"></param>
+    /// <param name="dirPattern"></param>
+    /// <param name="filePattern"></param>
+    /// <returns></returns>
     public static string[] GetFilesPath(string dirName, string dirPattern = "*", string filePattern = "*")
     {
         List<string> list = new List<string>();
@@ -139,6 +166,13 @@ public class QFileOperation
         return list.ToArray();
     }
 
+    /// <summary>
+    /// 获得文件路径
+    /// </summary>
+    /// <param name="dirName"></param>
+    /// <param name="suffix"></param>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
     public static string GetFilePath(string dirName, string suffix, string fileName)
     {
         var dir = new DirectoryInfo(dirName);

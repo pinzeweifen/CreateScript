@@ -66,6 +66,20 @@ namespace CreateScript
             EditorGUILayout.BeginVertical();
             {
                 DrawCreatePath();
+                EditorGUILayout.Space();
+
+                EditorGUILayout.BeginHorizontal();
+                {
+                    QConfigure.isCreateModel = EditorPrefs.GetBool("是否生成Model", true);
+                    QConfigure.isCreateModel = EditorGUILayout.ToggleLeft("是否生成Model", QConfigure.isCreateModel, GUILayout.MaxWidth(100));
+                    EditorPrefs.SetBool("是否生成Model", QConfigure.isCreateModel);
+
+                    QConfigure.isCreateController = EditorPrefs.GetBool("是否生成Controller", true);
+                    QConfigure.isCreateController = EditorGUILayout.ToggleLeft("是否生成Controller", QConfigure.isCreateController, GUILayout.MaxWidth(120));
+                    EditorPrefs.SetBool("是否生成Controller", QConfigure.isCreateController);
+                }
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.Space();
                 EditorGUILayout.BeginHorizontal();
                 {
                     if (GUILayout.Button("生成脚本")) manager.CreateFile();

@@ -10,6 +10,8 @@ namespace CreateScript
     {
         public static string referencedefaultPath = "Script/UI";
         public static string referencePath;
+        public static bool isCreateModel = true;
+        public static bool isCreateController = true;
 
         public static string plugName = "QCreateScript";
         private static string assetPath = "\\Asset\\info.asset";
@@ -71,7 +73,13 @@ namespace CreateScript
             "using UnityEngine;\n" +
             "using UnityEngine.UI;\n" +
             "using System;\n\n" +
-            "public partial class {0}_UI :MonoBehaviour\n{{\n{1}\n}}";
+            "public partial class {0}_UI :QBaseActive,IWindow\n{{\n{1}\n}}";
+
+        public static readonly string uiCode2 =
+    "using UnityEngine;\n" +
+    "using UnityEngine.UI;\n" +
+    "using System;\n\n" +
+    "public partial class {0}_UI \n{{\n{1}\n}}";
 
         public static readonly string uiClassCode =
             "{0}\n{1}\n{2}\n{3}\n" +
@@ -93,7 +101,7 @@ namespace CreateScript
 
         public static readonly string controllerBuildCode =
             "using UnityEngine;\n\n" +
-            "\n\npublic partial class {0}_Controller\n{{\n" +
+            "\n\npublic partial class {0}_Controller:IController\n{{\n" +
             "\tprivate {0}_UI ui;\n" +
             "\tprivate {0}_Model model = new {0}_Model();\n\n" +
             "\tpublic {0}_Controller({0}_UI ui)\n\t{{\n" +
@@ -104,6 +112,20 @@ namespace CreateScript
             "\tpartial void OnAwake();\n" +
             "{2}\n{3}\n" +
             "}}";
+
+        public static readonly string controllerBuildCode2 =
+    "using UnityEngine;\n\n" +
+    "\n\npublic partial class {0}_Controller:IController\n{{\n" +
+    "\tprivate {0}_UI ui;\n" +
+    //"\tprivate {0}_Model model = new {0}_Model();\n\n" +
+    "\tpublic {0}_Controller({0}_UI ui)\n\t{{\n" +
+    "\t\tthis.ui = ui;\n" +
+    "\t\tOnAwake();\n" +
+    "{1}" +
+    "\t}}\n" +
+    "\tpartial void OnAwake();\n" +
+    "{2}\n{3}\n" +
+    "}}";
 
         public static string FilePath(string name)
         {

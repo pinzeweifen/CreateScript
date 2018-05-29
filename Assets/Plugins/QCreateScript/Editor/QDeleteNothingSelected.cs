@@ -10,7 +10,7 @@ namespace CreateScript
         [MenuItem("Tools/NothingSelected")]
         static void Init()
         {
-            var array = Selection.transforms;
+            var array = Selection.gameObjects;
             if (array == null)
             {
                 EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.noSelect, QConfigure.ok);
@@ -19,8 +19,8 @@ namespace CreateScript
             
             foreach(var item in array)
             {
-                DeleteComponent(item);
-                WhileTr(item);
+                DeleteComponent(item.transform);
+                WhileTr(item.transform);
             }
         }
         
@@ -43,7 +43,7 @@ namespace CreateScript
             SerializedObject so = new SerializedObject(tr.gameObject);
             var soProperties = so.FindProperty("m_Component");
 
-            for (int i = 0; i < count; i++)
+            for (int i = count-1; i >=0; i--)
             {
                 if (coms[i] == null)
                 {

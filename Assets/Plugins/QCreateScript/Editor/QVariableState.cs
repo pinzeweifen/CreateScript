@@ -50,13 +50,16 @@ namespace CreateScript
                 if (isVariable) EditorGUI.DrawRect(rect, new Color(0, 0.5f, 0, 0.3f));
 
                 isVariable = EditorGUILayout.ToggleLeft("变量", isVariable, toggleMaxWidth);
-                isAttribute = EditorGUILayout.ToggleLeft("属性器", isAttribute, toggleMaxWidth);
 
-                GUI.enabled = isSelectEvent;
-                isEvent = EditorGUILayout.ToggleLeft("事件", isEvent, toggleMaxWidth);
-                GUI.enabled = true;
+                {
+                    GUI.enabled = isVariable;
+                    isAttribute = EditorGUILayout.ToggleLeft("属性器", isAttribute, toggleMaxWidth);
 
-
+                    GUI.enabled = !isVariable? false:isSelectEvent;
+                    isEvent = EditorGUILayout.ToggleLeft("事件", isEvent, toggleMaxWidth);
+                    GUI.enabled = true;
+                }
+                
                 oldIndex = index;
                 comNames = QGlobalFun.GetComponentsName(t);
                 index = EditorGUILayout.Popup(index, comNames, popupMaxWidth);
