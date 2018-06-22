@@ -429,6 +429,7 @@ namespace CreateScript
             JsonData jd = new JsonData();
             foreach (var item in dic)
             {
+                if (!item.Value.state.isVariable)continue;
                 VariableJson vj = new VariableJson();
                 var state = item.Value.state;
                 vj.isOpen = state.isOpen;
