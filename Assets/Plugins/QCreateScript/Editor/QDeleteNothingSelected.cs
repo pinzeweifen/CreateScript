@@ -7,7 +7,7 @@ namespace CreateScript
 {
     public class QDeleteNothingSelected : Editor
     {
-        [MenuItem("Tools/NothingSelected")]
+        [MenuItem("Assets/NothingSelected")]
         static void Init()
         {
             var array = Selection.gameObjects;

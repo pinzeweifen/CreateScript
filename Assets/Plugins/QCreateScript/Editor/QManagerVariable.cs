@@ -5,6 +5,7 @@ using UnityEditor;
 using System.Text;
 using System.IO;
 using System.Reflection;
+using LitJson;
 
 namespace CreateScript
 {
@@ -34,6 +35,31 @@ namespace CreateScript
         StringBuilder newAttribute = new StringBuilder();
         StringBuilder register = new StringBuilder();
         StringBuilder function = new StringBuilder();
+
+        public void Init()
+        {
+            if(!QFileOperation.IsExists(QConfigure.GetInfoPath()))return;
+
+            var value = QFileOperation.ReadText(QConfigure.GetInfoPath());
+            var jd = JsonMapper.ToObject(value);
+            if (jd.IsArray)
+            {
+                for (int i = 0; i < jd.Count; i++)
+                {
+                    VariableJson vj = JsonMapper.ToObject<VariableJson>(jd[i].ToJson());
+                    var obj = QConfigure.selectTransform.Find(vj.findPath);
+                    if(obj==null)continue;
+                    var v = this[obj];
+                    if(v == null)continue;
+                    v.state.isOpen = vj.isOpen;
+                    v.state.isVariable = vj.isVariable;
+                    v.state.isAttribute = vj.isAttribute;
+                    v.state.isEvent = vj.isEvent;
+                    v.state.index = vj.index;
+                }
+            }
+        }
+
         public string GetBuildUICode()
         {
             newAttribute.Length =
@@ -90,7 +116,7 @@ namespace CreateScript
 
             var tmp = string.Format(QConfigure.uiClassCode,
                 variable, attributeVariable, controllerEvent, attribute, find, newAttribute, register, function);
-            return string.Format(QConfigure.uiCode2, QGlobalFun.GetString(Selection.activeTransform.name), tmp);
+            return string.Format(QConfigure.uiCode2, QGlobalFun.GetString(QConfigure.selectTransform.name), tmp);
         }
 
         StringBuilder assignment = new StringBuilder();
@@ -113,7 +139,7 @@ namespace CreateScript
                     declare.AppendFormat(QConfigure.declareFormat, value.attributeName, type);
                     /*fun.AppendFormat("\tprivate void {0}({1})\n\t{{\n\t\t{2}({3});\n\t}}\n",
                         value.eventName, type, value.attributeName, value.type == "Button" ? string.Empty : "value");*/
-                    fun.AppendFormat(QConfigure.funFormat,value.eventName, type,
+                    fun.AppendFormat(QConfigure.funFormat, value.eventName, type,
                         value.attributeName, value.IsButton() ? string.Empty : "value");
                 }
             }
@@ -129,7 +155,7 @@ namespace CreateScript
             }
             return string.Format(
                 code,
-                QGlobalFun.GetString(Selection.activeTransform.name),
+                QGlobalFun.GetString(QConfigure.selectTransform.name),
                 assignment,
                 declare,
                 fun);
@@ -137,17 +163,17 @@ namespace CreateScript
 
         public string GetUICode()
         {
-            return string.Format(QConfigure.uiCode, QGlobalFun.GetString(Selection.activeTransform.name), QConfigure.uicodeOnAwake);
+            return string.Format(QConfigure.uiCode, QGlobalFun.GetString(QConfigure.selectTransform.name), QConfigure.uicodeOnAwake);
         }
 
         public string GetModelCode()
         {
-            return string.Format(QConfigure.modelCode, QGlobalFun.GetString(Selection.activeTransform.name));
+            return string.Format(QConfigure.modelCode, QGlobalFun.GetString(QConfigure.selectTransform.name));
         }
 
         public string GetControllerCode()
         {
-            return string.Format(QConfigure.controllerCode, QGlobalFun.GetString(Selection.activeTransform.name));
+            return string.Format(QConfigure.controllerCode, QGlobalFun.GetString(QConfigure.selectTransform.name));
         }
 
         public override string ToString()
@@ -174,8 +200,8 @@ namespace CreateScript
 
         public void TotalSelectVariable(bool isOn = true)
         {
-            if (Selection.activeTransform != null)
-                TotalSelect(Selection.activeTransform, isOn);
+            if (QConfigure.selectTransform != null)
+                TotalSelect(QConfigure.selectTransform, isOn);
         }
 
         public void TotalAttribute(bool isOn = true)
@@ -211,7 +237,7 @@ namespace CreateScript
 
         public void CreateFile()
         {
-            if (Selection.activeTransform == null)
+            if (QConfigure.selectTransform == null)
             {
                 EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.noSelect, QConfigure.ok);
                 return;
@@ -230,7 +256,7 @@ namespace CreateScript
             QFileOperation.WriteText(QConfigure.FilePath(QConfigure.UIFileName), GetUICode());
             QFileOperation.WriteText(QConfigure.FilePath(QConfigure.UIBuildFileName), GetBuildUICode());
 
-            if(QConfigure.isCreateModel)
+            if (QConfigure.isCreateModel)
             {
                 QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ModelFileName), GetModelCode());
             }
@@ -241,13 +267,21 @@ namespace CreateScript
                 QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ControllerBuildFileName), GetControllerBuildCode());
             }
 
-            GetBindingInfo();
+            if (QConfigure.version == 1)
+            {
+                GetBindingInfo();
+            }
+            else
+            {
+                GetBindingInfoToJson();
+            }
+            QConfigure.Compiling();
             AssetDatabase.Refresh();
         }
 
         public void Update()
         {
-            if (Selection.activeGameObject == null) return;
+            if (QConfigure.selectTransform == null) return;
             if (EditorApplication.isCompiling)
             {
                 EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.editorCompiling, QConfigure.ok);
@@ -265,21 +299,29 @@ namespace CreateScript
             {
                 QFileOperation.WriteText(QConfigure.FilePath(QConfigure.ControllerBuildFileName), GetControllerBuildCode(), FileMode.Create);
             }
-            
-            GetBindingInfo();
+
+            if (QConfigure.version == 1)
+            {
+                GetBindingInfo();
+            }
+            else
+            {
+                GetBindingInfoToJson();
+            }
+            QConfigure.Compiling();
             AssetDatabase.Refresh();
         }
 
         public void Copy()
         {
-            if (Selection.activeGameObject == null) return;
+            if (QConfigure.selectTransform == null) return;
             GUIUtility.systemCopyBuffer = GetBuildUICode();
             EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.copy, QConfigure.ok);
         }
 
         public void MountScript()
         {
-            if (Selection.activeGameObject == null) return;
+            if (QConfigure.selectTransform == null) return;
 
             if (EditorApplication.isCompiling)
             {
@@ -294,7 +336,7 @@ namespace CreateScript
                 EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.notCreate, QConfigure.ok);
                 return;
             }
-            var root = Selection.activeGameObject;
+            var root = QConfigure.selectTransform.gameObject;
             var target = root.GetComponent(scriptType);
             if (target == null)
             {
@@ -304,33 +346,39 @@ namespace CreateScript
 
         public void BindingUI()
         {
-            if (Selection.activeGameObject == null) return;
+            if (QConfigure.selectTransform == null) return;
             if (EditorApplication.isCompiling)
             {
                 EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.editorCompiling, QConfigure.ok);
                 return;
             }
-            var so = AssetDatabase.LoadAssetAtPath<QScriptInfo>(QConfigure.AssetPath);
-
-            var infos = so.GetFieldInfos(QConfigure.UIName);
-            if (infos == null)
+            if (QConfigure.selectTransform.GetComponent(QConfigure.UIName) == null)
             {
-                EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.plugCreate, QConfigure.ok);
+                EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.noMountScript, QConfigure.ok);
+                return;
             }
-            else
+
+            var assembly = QGlobalFun.GetAssembly();
+            var type = assembly.GetType(QConfigure.UIName);
+
+            if (type == null)
             {
-                var assembly = QGlobalFun.GetAssembly();
-                var type = assembly.GetType(QConfigure.UIName);
-                
-                if(type == null)
+                EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.notCreate, QConfigure.ok);
+                return;
+            }
+
+            var root = QConfigure.selectTransform;
+            var target = root.GetComponent(type);
+
+            if (QConfigure.version == 1)
+            {
+                var so = AssetDatabase.LoadAssetAtPath<QScriptInfo>(QConfigure.InfoPath);
+                var infos = so.GetFieldInfos(QConfigure.UIName);
+                if (infos == null)
                 {
-                    EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.notCreate, QConfigure.ok);
+                    EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.plugCreate, QConfigure.ok);
                     return;
                 }
-
-                var root = Selection.activeTransform;
-                var target = root.GetComponent(type);
-
                 foreach (var info in infos)
                 {
                     if (string.IsNullOrEmpty(info.name)) continue;
@@ -341,21 +389,73 @@ namespace CreateScript
                                     null, target, new object[] { root.Find(info.path).GetComponent(info.type) }, null, null, null);
                 }
             }
+            if (QConfigure.version == 2)
+            {
+                if (!QFileOperation.IsExists(QConfigure.GetInfoPath()))
+                {
+                    EditorUtility.DisplayDialog(QConfigure.msgTitle, QConfigure.plugCreate, QConfigure.ok);
+                    return;
+                }
+                var value = QFileOperation.ReadText(QConfigure.GetInfoPath());
+                var jd = JsonMapper.ToObject(value);
+                if (jd.IsArray)
+                {
+                    for (int i = 0; i < jd.Count; i++)
+                    {
+                        VariableJson vj = JsonMapper.ToObject<VariableJson>(jd[i].ToJson());
+                        if (string.IsNullOrEmpty(vj.name)) continue;
+                        type.InvokeMember(vj.name,
+                                        BindingFlags.SetField |
+                                        BindingFlags.Instance |
+                                        BindingFlags.NonPublic,
+                                        null, target, new object[] { root.Find(vj.findPath).GetComponent(vj.type) }, null, null, null);
+                    }
+                }
+            }
+
+            var obj = PrefabUtility.GetPrefabParent(root.gameObject);
+            if (obj != null)
+            {
+                PrefabUtility.ReplacePrefab(root.gameObject, obj, ReplacePrefabOptions.ConnectToPrefab);
+                AssetDatabase.Refresh();
+            }
         }
 
+
+        public void GetBindingInfoToJson()
+        {
+            if (QConfigure.selectTransform == null) return;
+
+            JsonData jd = new JsonData();
+            foreach (var item in dic)
+            {
+                VariableJson vj = new VariableJson();
+                var state = item.Value.state;
+                vj.isOpen = state.isOpen;
+                vj.isAttribute = state.isAttribute;
+                vj.isEvent = state.isEvent;
+                vj.isVariable = state.isVariable;
+                vj.index = state.index;
+                vj.name = item.Value.name;
+                vj.type = item.Value.type;
+                vj.findPath = QGlobalFun.GetGameObjectPath(item.Key, QConfigure.selectTransform);
+                jd.Add(JsonMapper.ToObject(JsonMapper.ToJson(vj)));
+            }
+            QFileOperation.WriteText(QConfigure.GetInfoPath(), jd.ToJson());
+        }
 
         private void GetBindingInfo()
         {
             QScriptInfo so;
-            if (QFileOperation.IsExists(QConfigure.AssetPath))
+            if (QFileOperation.IsExists(QConfigure.InfoPath))
             {
-                so = AssetDatabase.LoadAssetAtPath<QScriptInfo>(QConfigure.AssetPath);
+                so = AssetDatabase.LoadAssetAtPath<QScriptInfo>(QConfigure.InfoPath);
             }
             else
             {
                 so = ScriptableObject.CreateInstance<QScriptInfo>();
             }
-            
+
             List<string> k = new List<string>(dic.Count);
             List<string> t = new List<string>(dic.Count);
             List<string> p = new List<string>(dic.Count);
@@ -367,7 +467,7 @@ namespace CreateScript
                 {
                     k.Add(target.name);
                     t.Add(target.type.ToString());
-                    p.Add(QGlobalFun.GetGameObjectPath(key, Selection.activeTransform));
+                    p.Add(QGlobalFun.GetGameObjectPath(key, QConfigure.selectTransform));
                 }
             }
 
@@ -383,18 +483,17 @@ namespace CreateScript
 
             so.SetClassInfo(QConfigure.UIName, infos);
 
-            if (QFileOperation.IsExists(QConfigure.AssetPath))
+            if (QFileOperation.IsExists(QConfigure.InfoPath))
             {
                 AssetDatabase.SaveAssets();
             }
             else
             {
-                if (QFileOperation.IsDirctoryName(QConfigure.AssetPath, true))
+                if (QFileOperation.IsDirctoryName(QConfigure.InfoPath, true))
                 {
-                    AssetDatabase.CreateAsset(so, QConfigure.AssetPath);
+                    AssetDatabase.CreateAsset(so, QConfigure.InfoPath);
                 }
             }
         }
-
     }
 }

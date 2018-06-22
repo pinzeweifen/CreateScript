@@ -8,6 +8,8 @@ using System.Text;
 
 namespace CreateScript
 {
+    
+
     public class QVariableModel
     {
         private static Dictionary<string, Transform> nameDic = new Dictionary<string, Transform>();

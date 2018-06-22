@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System;
 
 public class QFileOperation
 {
@@ -106,9 +107,8 @@ public class QFileOperation
     /// <returns></returns>
     public static Texture2D ReadTexture2D(string filePath)
     {
-        var data = File.ReadAllBytes(filePath);
         Texture2D t = new Texture2D(2, 2, TextureFormat.PVRTC_RGB2, false);
-        t.LoadImage(data);
+        t.LoadImage(File.ReadAllBytes(filePath));
         return t;
     }
 
@@ -131,7 +131,7 @@ public class QFileOperation
     public static string GetAssetsDirectoryPath(string fileName)
     {
         DirectoryInfo dir = new DirectoryInfo(Application.dataPath);
-        var infos = dir.GetDirectories("*",SearchOption.AllDirectories);
+        var infos = dir.GetDirectories("*", SearchOption.AllDirectories);
         foreach (var info in infos)
         {
             if (info.FullName.Contains(fileName))
@@ -176,7 +176,7 @@ public class QFileOperation
     public static string GetFilePath(string dirName, string suffix, string fileName)
     {
         var dir = new DirectoryInfo(dirName);
-        var infos = dir.GetFiles(string.Format("*.{0}", suffix),SearchOption.AllDirectories);
+        var infos = dir.GetFiles(string.Format("*.{0}", suffix), SearchOption.AllDirectories);
         foreach (var info in infos)
         {
             if (info.Name.Contains(fileName))
@@ -186,4 +186,108 @@ public class QFileOperation
         }
         return string.Empty;
     }
+
+    /// <summary>
+    /// 获取文件夹大小
+    /// </summary>
+    /// <param name="dirPath"></param>
+    /// <returns></returns>
+    public static long GetDirectoryLength(string dirPath)
+    {
+        //判断给定的路径是否存在,如果不存在则退出
+        if (!Directory.Exists(dirPath))
+            return 0;
+        long len = 0;
+
+        //定义一个DirectoryInfo对象
+        DirectoryInfo di = new DirectoryInfo(dirPath);
+
+        //通过GetFiles方法,获取di目录中的所有文件的大小
+        foreach (FileInfo fi in di.GetFiles())
+        {
+            len += fi.Length;
+        }
+
+        //获取di中所有的文件夹,并存到一个新的对象数组中,以进行递归
+        DirectoryInfo[] dis = di.GetDirectories();
+        if (dis.Length > 0)
+        {
+            for (int i = 0; i < dis.Length; i++)
+            {
+                len += GetDirectoryLength(dis[i].FullName);
+            }
+        }
+        return len;
+    }
+
+    /// <summary>
+    /// 读取文件大小
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
+    public static long FileSize(string filePath)
+    {
+        long temp = 0;
+
+        //判断当前路径所指向的是否为文件
+        if (File.Exists(filePath) == false)
+        {
+            string[] str1 = Directory.GetFileSystemEntries(filePath);
+            foreach (string s1 in str1)
+            {
+                temp += FileSize(s1);
+            }
+        }
+        else
+        {
+            FileInfo fileInfo = new FileInfo(filePath);
+            return fileInfo.Length;
+        }
+        return temp;
+    }
+
+
+    /// <summary>
+    /// 删除文件夹
+    /// </summary>
+    /// <param name="srcPath"></param>
+    public static void DelectDir(string srcPath)
+    {
+        try
+        {
+            if(!Directory.Exists(srcPath)){
+                DeleteFile(srcPath);
+                return;
+            }
+            DirectoryInfo dir = new DirectoryInfo(srcPath);
+            FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();  //返回目录中所有文件和子目录
+            foreach (FileSystemInfo i in fileinfo)
+            {
+                if (i is DirectoryInfo)            //判断是否文件夹
+                {
+                    DirectoryInfo subdir = new DirectoryInfo(i.FullName);
+                    subdir.Delete(true);          //删除子目录和文件
+                }
+                else
+                {
+                    File.Delete(i.FullName);      //删除指定文件
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+
+    public static void DeleteFile(string path){
+        if(!File.Exists(path))return;
+        try{
+            File.Delete(path);
+        }catch(Exception e){
+            Debug.Log(e);
+        }
+        
+    }
+
 }

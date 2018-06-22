@@ -21,6 +21,8 @@ namespace CreateScript
         private void Awake()
         {
             manager = new QManagerVariable();
+            if (QConfigure.selectTransform != null)
+                manager.Init();
         }
 
         [InitializeOnLoadMethod]
@@ -38,20 +40,52 @@ namespace CreateScript
 
         private void OnGUI()
         {
+            if (QConfigure.selectTransform != Selection.activeTransform)
+            {
+                if (QConfigure.selectTransform != null)
+                {
+                    manager.Clear();
+                }
+                QConfigure.selectTransform = Selection.activeTransform;
+                if (QConfigure.selectTransform != null)
+                {
+                    manager.Init();
+                }
+                if(Selection.gameObjects.Length==1){
+                    QConfigure.selectTransform = Selection.gameObjects[0].transform;
+                    if(QConfigure.selectTransform!=null){
+                        manager.Init();
+                    }
+                }
+            }
+
+
             Test();
             EditorGUILayout.BeginHorizontal();
             {
+                if (QConfigure.version == 2)
+                {
+                    DrawLeftListView();
+                }
                 DrawLeft();
                 DrawRight();
             }
             EditorGUILayout.EndHorizontal();
+
+            if (!EditorApplication.isCompiling)
+            {
+                if (QConfigure.IsCompiling())
+                {
+                    manager.Init();
+                }
+            }
         }
 
         private void Test()
-        {
-            //if (GUILayout.Button("测试"))
-            {
-            }
+        {/*
+            if(GUILayout.Button("Test")){
+                manager.GetBindingInfoToJson();
+            }*/
         }
 
         private void DrawCreatePath()
@@ -61,22 +95,41 @@ namespace CreateScript
             EditorPrefs.SetString("文件生成路径", QConfigure.referencePath);
         }
 
+        Vector2 leftViewPos;
+        private void DrawLeftListView()
+        {
+            /*EditorGUILayout.BeginVertical(GUILayout.MaxWidth(200));
+            {
+                EditorGUILayout.LabelField("已生成界面", "");
+                leftViewPos = EditorGUILayout.BeginScrollView(leftViewPos);
+                {
+                }
+                EditorGUILayout.EndScrollView();
+            }
+            EditorGUILayout.EndVertical();*/
+        }
+
         private void DrawLeft()
         {
             EditorGUILayout.BeginVertical();
             {
                 DrawCreatePath();
                 EditorGUILayout.Space();
-
+                QConfigure.Version = EditorGUILayout.Popup("版本", QConfigure.Version, QConfigure.versionStr);
+                EditorGUILayout.Space();
                 EditorGUILayout.BeginHorizontal();
                 {
-                    QConfigure.isCreateModel = EditorPrefs.GetBool("是否生成Model", true);
-                    QConfigure.isCreateModel = EditorGUILayout.ToggleLeft("是否生成Model", QConfigure.isCreateModel, GUILayout.MaxWidth(100));
-                    EditorPrefs.SetBool("是否生成Model", QConfigure.isCreateModel);
+                    if (QConfigure.version == 1)
+                    {
+                        QConfigure.isCreateModel = EditorPrefs.GetBool("是否生成Model", true);
+                        QConfigure.isCreateModel = EditorGUILayout.ToggleLeft("是否生成Model", QConfigure.isCreateModel, GUILayout.MaxWidth(100));
+                        EditorPrefs.SetBool("是否生成Model", QConfigure.isCreateModel);
+                    }
 
                     QConfigure.isCreateController = EditorPrefs.GetBool("是否生成Controller", true);
                     QConfigure.isCreateController = EditorGUILayout.ToggleLeft("是否生成Controller", QConfigure.isCreateController, GUILayout.MaxWidth(120));
                     EditorPrefs.SetBool("是否生成Controller", QConfigure.isCreateController);
+
                 }
                 EditorGUILayout.EndHorizontal();
                 EditorGUILayout.Space();
@@ -113,7 +166,7 @@ namespace CreateScript
                 {
                     pos = EditorGUILayout.BeginScrollView(pos, GUILayout.Width(position.width * 0.5f));
                     {
-                        if (Selection.activeTransform != null)
+                        if (QConfigure.selectTransform != null)
                         {
                             var str = manager.ToString();
                             var array = QGlobalFun.GetStringList(str);
@@ -125,7 +178,7 @@ namespace CreateScript
                                 }
                             }
                             EditorGUILayout.EndVertical();
-                            
+
                         }
                     }
                     EditorGUILayout.EndScrollView();
@@ -162,9 +215,9 @@ namespace CreateScript
             EditorGUILayout.Space();
             tablePos = EditorGUILayout.BeginScrollView(tablePos);
             {
-                if (Selection.activeTransform != null)
+                if (QConfigure.selectTransform != null)
                 {
-                    DrawRow(Selection.activeTransform);
+                    DrawRow(QConfigure.selectTransform);
                 }
             }
             EditorGUILayout.EndScrollView();

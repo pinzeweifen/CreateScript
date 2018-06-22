@@ -6,6 +6,19 @@ using System;
 
 namespace CreateScript
 {
+
+    public struct VariableJson
+    {
+        public bool isVariable;
+        public bool isAttribute;
+        public bool isEvent;
+        public int index;
+        public bool isOpen;
+        public string name;
+        public string type;
+        public string findPath;
+    }
+
     public class QVariableState
     {
         public static int space = 20;
@@ -15,7 +28,7 @@ namespace CreateScript
         public bool isVariable = false;
         public bool isAttribute = false;
         public bool isEvent = false;
-        private int index = 0;
+        public int index = 0;
         private int oldIndex;
         public bool isOpen = true;
         private string[] comNames;
@@ -50,6 +63,12 @@ namespace CreateScript
                 if (isVariable) EditorGUI.DrawRect(rect, new Color(0, 0.5f, 0, 0.3f));
 
                 isVariable = EditorGUILayout.ToggleLeft("变量", isVariable, toggleMaxWidth);
+
+                if(!isVariable)
+                {
+                    isAttribute = false;
+                    isEvent = false;
+                }
 
                 {
                     GUI.enabled = isVariable;
